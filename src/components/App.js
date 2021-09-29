@@ -48,12 +48,33 @@ class App extends Component {
       });
   };
 
+  filterPosts = (e) => {
+    let value = e.target.value;
+    const { posts } = this.state;
+    const encoded = encodeURI(value);
+    if (value) {
+      axios
+        .get(
+          `https://practiceapi.devmountain.com/api/posts/filter?text=${encoded}`
+        )
+        .then((results) => {
+          this.setState({ posts: results.data });
+        });
+    } else {
+      axios
+        .get("https://practiceapi.devmountain.com/api/posts")
+        .then((results) => {
+          this.setState({ posts: results.data });
+        });
+    }
+  };
+
   render() {
     const { posts } = this.state;
 
     return (
       <div className="App__parent">
-        <Header />
+        <Header onChange={this.filterPosts} />
 
         <section className="App__content">
           <Compose createPostFn={this.createPost} />
